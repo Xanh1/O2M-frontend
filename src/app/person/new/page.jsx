@@ -3,7 +3,6 @@
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import "./signStyle.css";
 import { useRouter } from "next/navigation";
 import swal from "sweetalert";
 import { save_person } from "../../../hooks/service_person";

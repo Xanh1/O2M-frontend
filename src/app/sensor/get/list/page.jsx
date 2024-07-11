@@ -1,10 +1,9 @@
 "use client";
 
-import { all_Sensor } from "../../../../hooks/service_sensor";
+import { all_Sensor } from '@/hooks/service_sensor';  // Usando alias
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Sidebar from "../../../../components/Sidebar";
-import "./signStyle.css";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";

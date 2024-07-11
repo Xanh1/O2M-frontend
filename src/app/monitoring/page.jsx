@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 import swal from "sweetalert";
 
 import { useRouter } from "next/navigation";
-import "./styles.css";
 import Image from "next/image";
 import Sidebar from "../../components/Sidebar";
 
