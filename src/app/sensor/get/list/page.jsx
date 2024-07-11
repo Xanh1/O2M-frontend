@@ -122,6 +122,12 @@ export default function Sensor() {
                   <th className="p-3 text-sm text-gray-500 font-semibold tracking-wide text-left">
                     IP
                   </th>
+                  <th className="p-3 text-sm text-gray-500 font-semibold tracking-wide text-left">
+                    Longitude
+                  </th>
+                  <th className="p-3 text-sm text-gray-500 font-semibold tracking-wide text-left">
+                    Latitude
+                  </th>
                   <th className="p-3 text-sm text-gray-500 font-semibold tracking-wide text-left"></th>
                 </tr>
               </thead>
@@ -131,24 +137,27 @@ export default function Sensor() {
                     <td className="p-3 text-sm text-gray-700 ">
                       {sensor.name}
                     </td>
-                    <td className="p-3 text-sm text-gray-700 ">
-                      {sensor.element_type.toString()}
+                    <td className="p-3 text-sm text-gray-700">
+                      {sensor.element_type.toString().split('.')[1]} {/* Obtén solo el nombre después del punto */}
                     </td>
-                    <td className="p-3 text-sm text-gray-700 ">
+                    <td className="p-3 text-sm text-gray-700">
                       <span
                         className={`py-1 px-2 rounded 
-                                            ${
-                                                (sensor.status).toString() === "true"
-                                                ? "bg-green-50"
-                                                : (sensor.status).toString() === "false"
-                                                ? "bg-red-50"
-                                                : ""
-                                            }`}
+                ${(sensor.status).toString() === "true"
+                            ? "bg-green-50"
+                            : (sensor.status).toString() === "false"
+                              ? "bg-red-50"
+                              : ""
+                          }`}
                       >
-                        {(sensor.status).toString()}
+                        {(sensor.status).toString() === "true" ? "active" : "inactive"}
                       </span>
                     </td>
                     <td className="p-3 text-sm text-gray-700 ">{sensor.ip}</td>
+                    <td className="p-3 text-sm text-gray-700 ">{sensor.longitude}</td>
+                    <td className="p-3 text-sm text-gray-700 ">{sensor.latitude}</td>
+
+
                     <td>
                       <Link
                         href={'/sensor/' + sensor.uid}

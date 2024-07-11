@@ -10,17 +10,36 @@ import swal from "sweetalert";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { Form, Row, Col, Button } from "react-bootstrap";
 import Sidebar from "../../../components/Sidebar";
 import Image from "next/image";
+import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+
+
+
+
+function LocationMarker({ setLat, setLng }) {
+  const map = useMapEvents({
+    click(e) {
+      setLat(e.latlng.lat);
+      setLng(e.latlng.lng);
+      map.flyTo(e.latlng, map.getZoom());
+    },
+  });
+
+  return null;
+}
 
 export default function NewSensor() {
   //const router= useRouter()
   let token = Cookies.get("token");
   let user = Cookies.get("token");
   let necesary = Cookies.get("necesary");
-
+  let [lat, setLat] = useState(null);
+  let [lng, setLng] = useState(null);
   const router = useRouter();
+
+  
   let [element, setelement] = useState(null);
   let [estado, setEstado] = useState(false);
   useEffect(() => {
@@ -46,7 +65,8 @@ export default function NewSensor() {
 
   const sendInfo = (data) => {
     //data.fecha_nac = new Date(data.fecha_nac).toISOString().split('T')[0];
-
+    data.latitude = lat; // Añade latitud y longitud al objeto de datos
+    data.longitude = lng;
     //console.log(data.fecha_nac)
     data.person = necesary;
     save_sensor(data, token).then((info) => {
@@ -83,6 +103,7 @@ export default function NewSensor() {
     Cookies.remoce("necesary");
   };
 
+ 
   return (
     <div className="h-screen flex">
       <main className="flex-1 flex">
@@ -102,22 +123,13 @@ export default function NewSensor() {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-              <g
-                id="SVGRepo_tracerCarrier"
+              <path
+                d="M15 4H18C19.1046 4 20 4.89543 20 6V18C20 19.1046 19.1046 20 18 20H15M8 8L4 12M4 12L8 16M4 12L16 12"
+                stroke="#000000"
+                strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-              ></g>
-              <g id="SVGRepo_iconCarrier">
-                {" "}
-                <path
-                  d="M15 4H18C19.1046 4 20 4.89543 20 6V18C20 19.1046 19.1046 20 18 20H15M8 8L4 12M4 12L8 16M4 12L16 12"
-                  stroke="#000000"
-                  stroke-width="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                ></path>{" "}
-              </g>
+              ></path>
             </svg>
           </Link>
         </aside>
@@ -132,10 +144,7 @@ export default function NewSensor() {
               <h1 className="font-semibold text-sm my-4">Sensor info</h1>
               <div className="flex gap-4">
                 <div className="max-w-sm my-3">
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium mb-2"
-                  >
+                  <label htmlFor="name" className="block text-sm font-medium mb-2">
                     Name
                   </label>
                   <input
@@ -151,16 +160,13 @@ export default function NewSensor() {
                 </div>
 
                 <div className="max-w-sm my-3">
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium mb-2"
-                  >
+                  <label htmlFor="ip" className="block text-sm font-medium mb-2">
                     IP
                   </label>
                   <input
                     type="text"
-                    name="email"
-                    id="email"
+                    name="ip"
+                    id="ip"
                     {...register("ip")}
                     className="py-2 px-2 block w-full border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                   />
@@ -171,12 +177,12 @@ export default function NewSensor() {
               </div>
 
               <div className="my-4">
-                <label className="block my-2" htmlFor="options">
+                <label className="block my-2" htmlFor="element_type">
                   Choose an element..
                 </label>
                 <select
                   className="w-full border rounded-md p-1 bg-white"
-                  id="product"
+                  id="element_type"
                   {...register("element_type")}
                 >
                   {element &&
@@ -186,6 +192,51 @@ export default function NewSensor() {
                       </option>
                     ))}
                 </select>
+              </div>
+            </div>
+
+            <div className="flex gap-4 my-4">
+              <div className="max-w-sm my-3">
+                <label htmlFor="latitude" className="block text-sm font-medium mb-2">
+                  Latitude
+                </label>
+                <input
+                  type="text"
+                  name="latitude"
+                  id="latitude"
+                  {...register("latitude")}
+
+                  value={lat || ""}
+                  className="py-2 px-2 block w-full border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                />
+              </div>
+
+              <div className="max-w-sm my-3">
+                <label htmlFor="longitude" className="block text-sm font-medium mb-2">
+                  Longitude
+                </label>
+                <input
+                  type="text"
+                  name="longitude"
+                  id="longitude"
+                  {...register("longitude")}
+
+                  value={lng || ""}
+                  className="py-2 px-2 block w-full border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                />
+              </div>
+            </div>
+
+            <div className="my-8 flex flex-col justify-center items-center">
+              <div style={{ width: "700px", height: "300px" }}>
+                <MapContainer center={[-4.03043, -79.19945]} zoom={40} style={{ width: "100%", height: "100%" }}>
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  />
+                  {lat && lng && <Marker position={[lat, lng]} />}
+                  <LocationMarker setLat={setLat} setLng={setLng} />
+                </MapContainer>
               </div>
             </div>
 

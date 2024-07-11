@@ -22,6 +22,20 @@ export async function save_sensor(data, token) {
   return datos.data;
 }
 
+
+export async function change_status(uid, token) {
+  let datos = null;
+  try {
+    datos = await GET("//modify_status_Sensor/"+uid, token);
+  } catch (error) {
+    console.log(error.response.data);
+    return error.response.data;
+  }
+  return datos.data;
+}
+
+
+
 export async function all_element(token) {
   let datos = null;
   try {

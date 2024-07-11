@@ -27,7 +27,7 @@ export default function login() {
         Cookies.set("usuario", info.person);
         Cookies.set("necesary", info.necesary);
         swal({
-          title: "Info",
+          title: "SUCCESSFUL LOGIN",
           text: "Welcome " + info.person,
           icon: "success",
           button: "Accept",
@@ -38,7 +38,7 @@ export default function login() {
         router.refresh();
       } else {
         swal({
-          title: "Error",
+          title: "Error at login",
           text: info.data.error,
           icon: "error",
           button: "Accept",

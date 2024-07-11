@@ -1,6 +1,6 @@
 "use client";
 
-import { modify_sensor, get } from "../../../hooks/service_sensor";
+import { modify_sensor, get, change_status } from "../../../hooks/service_sensor";
 import { all_element } from "../../../hooks/service_sensor";
 import { useForm, Controller } from "react-hook-form";
 import * as Yup from "yup";
@@ -12,14 +12,36 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import Sidebar from "../../../components/Sidebar";
+import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from 'leaflet';
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+import markerIcon from 'leaflet/dist/images/marker-icon.png';
+import markerShadow from 'leaflet/dist/images/marker-shadow.png';
+
+const LocationMarker = ({ setLat, setLng }) => {
+  const map = useMapEvents({
+    click(e) {
+      const { lat, lng } = e.latlng;
+      setLat(lat);
+      setLng(lng);
+      map.flyTo(e.latlng, map.getZoom());
+    },
+  });
+
+  return null;
+};
 
 export default function EditSensor({ params }) {
   let token = Cookies.get("token");
   const router = useRouter();
+  
   let [element, setElement] = useState(null);
   let [estado, setEstado] = useState(false);
   let [sensor, setSensor] = useState(null);
-
+  const [lat, setLat] = useState(null);
+  const [lng, setLng] = useState(null);
+  
   useEffect(() => {
     if (!estado) {
       all_element(token).then((info) => {
@@ -33,8 +55,9 @@ export default function EditSensor({ params }) {
     if (!sensor) {
       get(token, params.uid).then((infor) => {
         if (infor.code === 200) {
-          console.log(infor.datos);
           setSensor(infor.datos);
+          setLat(infor.datos.latitude);
+          setLng(infor.datos.longitude);
         }
       });
     }
@@ -49,12 +72,15 @@ export default function EditSensor({ params }) {
   const { control, register, handleSubmit, formState } = useForm(formOptions);
   const { errors } = formState;
 
+
   const sendInfo = (data) => {
     data.uid = params.uid;
+    data.latitude = lat;
+    data.longitude = lng;
     modify_sensor(data, token).then((info) => {
       if (info.code === 200) {
         swal({
-          title: "CORRECTO",
+          title: "UPDATED",
           text: info.datos.tag,
           icon: "success",
           button: "Accept",
@@ -65,7 +91,7 @@ export default function EditSensor({ params }) {
         router.refresh();
       } else {
         swal({
-          title: "ERROR",
+          title: "ERROR AT UPDATE",
           text: info.datos.error,
           icon: "error",
           button: "Accept",
@@ -76,15 +102,56 @@ export default function EditSensor({ params }) {
     });
   };
 
+  const changeStatus_sensor = (e) => {
+    e.preventDefault(); 
+    change_status(sensor.uid, token).then((info) => {
+      if (info.code === 200) {
+        const newStatus = !sensor.status ? "active" : "inactive";
+
+        swal({
+          title: "STATUS CHANGED",
+          text: `Status changed to ${newStatus}`,
+          icon: "success",
+          button: "Accept",
+          timer: 4000,
+          closeOnEsc: true,
+        });
+        router.push("/sensor/get/list");
+        router.refresh();
+      } else {
+        swal({
+          title: "ERROR AT UPDATE STATUS",
+          text: info.datos.error,
+          icon: "error",
+          button: "Accept",
+          timer: 4000,
+          closeOnEsc: true,
+        });
+      }
+    });
+  };
   const logout = (e) => {
-    Cookies.remoce("token");
-    Cookies.remoce("usuario");
-    Cookies.remoce("necesary");
+    Cookies.remove("token");
+    Cookies.remove("usuario");
+    Cookies.remove("necesary");
   };
 
   if (!sensor) {
     return <div>Cargando...</div>;
   }
+
+
+  let DefaultIcon = L.icon({
+    iconUrl: markerIcon,
+    iconRetinaUrl: markerIcon2x,
+    shadowUrl: markerShadow,
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  });
+
+  L.Marker.prototype.options.icon = DefaultIcon;
 
   return (
     <div className="h-screen flex">
@@ -105,18 +172,14 @@ export default function EditSensor({ params }) {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-              <g
-                id="SVGRepo_tracerCarrier"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              ></g>
+              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+              <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
               <g id="SVGRepo_iconCarrier">
                 {" "}
                 <path
                   d="M15 4H18C19.1046 4 20 4.89543 20 6V18C20 19.1046 19.1046 20 18 20H15M8 8L4 12M4 12L8 16M4 12L16 12"
                   stroke="#000000"
-                  stroke-width="1.5"
+                  strokeWidth="1.5"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 ></path>{" "}
@@ -126,20 +189,20 @@ export default function EditSensor({ params }) {
         </aside>
 
         <div className="w-full flex flex-col p-4 justify-center">
-          <h1 className="font-semilbold text-2xl text-left">Register Sensor</h1>
+          <h1 className="font-semilbold text-2xl text-left">Editar Sensor</h1>
           <form
             className="my-8 flex flex-col justify-center items-center"
             onSubmit={handleSubmit(sendInfo)}
           >
             <div className="flex flex-col">
-              <h1 className="font-semibold text-sm my-4">Sensor info</h1>
+              <h1 className="font-semibold text-sm my-4">Información del Sensor</h1>
               <div className="flex gap-4">
                 <div className="max-w-sm my-3">
                   <label
-                    htmlFor="email"
+                    htmlFor="name"
                     className="block text-sm font-medium mb-2"
                   >
-                    Name
+                    Nombre
                   </label>
                   <input
                     type="text"
@@ -156,15 +219,15 @@ export default function EditSensor({ params }) {
 
                 <div className="max-w-sm my-3">
                   <label
-                    htmlFor="email"
+                    htmlFor="ip"
                     className="block text-sm font-medium mb-2"
                   >
                     IP
                   </label>
                   <input
                     type="text"
-                    name="email"
-                    id="email"
+                    name="ip"
+                    id="ip"
                     defaultValue={sensor.ip}
                     {...register("ip")}
                     className="py-2 px-2 block w-full border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
@@ -176,12 +239,12 @@ export default function EditSensor({ params }) {
               </div>
 
               <div className="my-4">
-                <label className="block my-2" htmlFor="options">
-                  Choose an element..
+                <label className="block my-2" htmlFor="element_type">
+                  Elija un elemento..
                 </label>
                 <select
                   className="w-full border rounded-md p-1 bg-white"
-                  id="product"
+                  id="element_type"
                   {...register("element_type")}
                 >
                   {element &&
@@ -193,12 +256,71 @@ export default function EditSensor({ params }) {
                 </select>
               </div>
             </div>
+            <div className="flex gap-4 my-4">
+              <div className="max-w-sm my-3">
+                <label htmlFor="latitude" className="block text-sm font-medium mb-2">
+                  Latitude
+                </label>
+                <input
+                  type="text"
+                  name="latitude"
+                  id="latitude"
+                  {...register("latitude")}
+                  value={lat}
+                  className="py-2 px-2 block w-full border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                />
+              </div>
+
+              <div className="max-w-sm my-3">
+                <label htmlFor="longitude" className="block text-sm font-medium mb-2">
+                  Longitude
+                </label>
+                <input
+                  type="text"
+                  name="longitude"
+                  id="longitude"
+                  {...register("longitude")}
+                  value={lng}
+                  className="py-2 px-2 block w-full border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                />
+              </div>
+            </div>
+
+            <div className="my-8 flex flex-col justify-center items-center">
+              <div style={{ width: "700px", height: "300px" }}>
+                <MapContainer center={[lat, lng]} zoom={40} style={{ width: "100%", height: "100%" }}>
+                  <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                  />
+                  {lat && lng && <Marker position={[lat, lng]} />}
+                  <LocationMarker setLat={setLat} setLng={setLng} />
+                </MapContainer>
+              </div>
+            </div>
+
+
 
             <div className="my-4">
-              <button className="btn relative border block w-full font-medium border-gray-200 inline-flex items-center justify-start overflow-hidden transition-all rounded-lg text-sm hover:bg-white group py-2 px-2">
+              <button
+                className="btn relative border block w-full font-medium border-gray-200 inline-flex items-center justify-start overflow-hidden transition-all rounded-lg text-sm hover:bg-white group py-2 px-2"
+                onClick={changeStatus_sensor}
+              >
                 <span className="w-56 h-48 rounded bg-blue-500 absolute bottom-0 left-0 translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
                 <span className="relative w-full text-center transition-colors duration-300 ease-in-out group-hover:text-white">
-                  Register
+                  Cambiar Estado
+                </span>
+              </button>
+            </div>
+
+            <div className="my-4">
+              <button
+                className="btn relative border block w-full font-medium border-gray-200 inline-flex items-center justify-start overflow-hidden transition-all rounded-lg text-sm hover:bg-white group py-2 px-2"
+                type="submit"
+              >
+                <span className="w-56 h-48 rounded bg-blue-500 absolute bottom-0 left-0 translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
+                <span className="relative w-full text-center transition-colors duration-300 ease-in-out group-hover:text-white">
+                  Guardar Cambios
                 </span>
               </button>
             </div>
