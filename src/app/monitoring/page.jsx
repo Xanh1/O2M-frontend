@@ -155,12 +155,6 @@ export default function Monitoring() {
                   <th className="p-3 text-sm text-gray-500 font-semibold tracking-wide text-left">
                     End data
                   </th>
-                  <th className="p-3 text-sm text-gray-500 font-semibold tracking-wide text-left">
-                    Latitude
-                  </th>
-                  <th className="p-3 text-sm text-gray-500 font-semibold tracking-wide text-left">
-                    Longitude
-                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -186,12 +180,7 @@ export default function Monitoring() {
                       <td className="p-3 text-sm text-gray-700 ">
                         {format_fecha(sensor.end_date)}
                       </td>
-                      <td className="p-3 text-sm text-gray-700 ">
-                        {sensor.latitude}
-                      </td>
-                      <td className="p-3 text-sm text-gray-700 ">
-                        {sensor.longitude}
-                      </td>
+
                     </tr>
                   ))}
               </tbody>

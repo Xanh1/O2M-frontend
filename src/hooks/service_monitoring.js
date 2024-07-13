@@ -16,6 +16,20 @@ export async function list_monitoring(token) {
     return datos.data;
 }
 
+
+
+export async function promedio_calidad_por_dia() {
+    let datos = null;
+
+    try {
+        datos = await GET('monitoring/promedio/todo');
+        console.log("aqui todo bien en listar monitoring");
+    } catch (error) {
+        console.log("Error en listar_lotes: ", error.response);
+        return { "code": 500 };
+    }
+    return datos.data;
+}
 export async function save_monitoring(data, token) {
     let datos = null;
 
