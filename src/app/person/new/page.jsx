@@ -18,14 +18,14 @@ export default function newPerson() {
 
   //validación de campos
   const validationSchema = yup.object().shape({
-    name: yup.string().required("Campo obligatorio"),
+    name: yup.string().required("Obligatory field"),
     dni: yup
       .string()
-      .required("Campo obligatorio")
-      .length(10, "El DNI debe tener 10 caracteres"),
-    last_name: yup.string().required("Campo obligatorio"),
-    email: yup.string().required("Campo obligatorio"),
-    password: yup.string().required("Campo obligatorio"),
+      .required("Obligatory field")
+      .length(10, "The DNI must have 10 characters"),
+    last_name: yup.string().required("Obligatory field"),
+    email: yup.string().required("Obligatory field (end with @unl.edu.ec)"),
+    password: yup.string().required("Obligatory field"),
   });
 
   //validar formulario
@@ -36,6 +36,7 @@ export default function newPerson() {
   let { errors } = formState;
 
   const enviar_data = (data) => {
+    console.log()
     save_person(data, token).then((info) => {
       if (info.code == "200") {
         swal({
@@ -58,7 +59,6 @@ export default function newPerson() {
           closeOnEsc: true,
         });
         console.log("No se pudo registrar");
-        console.log(info);
       }
     });
   };
@@ -67,6 +67,10 @@ export default function newPerson() {
     Cookies.remoce("token");
     Cookies.remoce("usuario");
     Cookies.remoce("necesary");
+  };
+
+  const cancelar = () => {
+    router.push("/person");
   };
 
   return (
@@ -218,11 +222,22 @@ export default function newPerson() {
               </div>
             </div>
 
-            <div className="my-4">
-              <button className="btn relative border block w-full font-medium border-gray-200 inline-flex items-center justify-start overflow-hidden transition-all rounded-lg text-sm hover:bg-white group py-2 px-2">
+            <div className="my-4 flex justify-between"> {/* Changed to flex justify-between for left and right alignment */}
+              <button
+                type="button"
+                onClick={cancelar}
+                className="btn relative border block w-full font-medium border-gray-200 inline-flex items-center justify-start overflow-hidden transition-all rounded-lg text-sm hover:bg-white group py-2 px-2"
+              >
+                <span className="w-56 h-48 rounded bg-red-500 absolute bottom-0 left-0 translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
+                <span className="relative w-full text-center transition-colors duration-300 ease-in-out group-hover:text-white">
+                  Cancelar
+                </span>
+              </button>
+
+              <button className="btn relative border block w-full font-medium border-gray-200 inline-flex items-center justify-start overflow-hidden transition-all rounded-lg text-sm hover:bg-white group py-2 px-2 ml-4">
                 <span className="w-56 h-48 rounded bg-blue-500 absolute bottom-0 left-0 translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
                 <span className="relative w-full text-center transition-colors duration-300 ease-in-out group-hover:text-white">
-                  Register
+                  Registrar
                 </span>
               </button>
             </div>

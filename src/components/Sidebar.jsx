@@ -38,7 +38,7 @@ export default function Sidebar() {
       </Link>
 
       <Link
-        href="/person/new"
+        href="/person"
         className="border p-2 rounded-full my-2 ease-in duration-300 shadow-md hover:scale-110"
         title="Users"
       >

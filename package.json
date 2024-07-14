@@ -9,7 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@headlessui/react": "^2.1.2",
     "@hookform/resolvers": "^3.9.0",
+    "@mui/material": "^5.16.1",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",
     "js-cookie": "^3.0.5",
@@ -17,6 +19,7 @@
     "leaflet-extra-markers": "^1.2.2",
     "next": "^14.2.5",
     "react": "^18",
+    "react-bootstrap": "^2.10.4",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18",
     "react-leaflet": "^4.2.1",

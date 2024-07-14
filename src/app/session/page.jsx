@@ -34,7 +34,7 @@ export default function login() {
           timer: 4000,
           closeOnEsc: true,
         });
-        router.push("/person/new");
+        router.push("/person");
         router.refresh();
       } else {
         swal({
