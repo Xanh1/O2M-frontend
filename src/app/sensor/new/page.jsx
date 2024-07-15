@@ -5,6 +5,8 @@ import { save_sensor, all_element } from "../../../hooks/service_sensor";
 import { useForm, Controller } from "react-hook-form";
 import * as Yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+
+import Userbar from "../../../components/Userbar";
 import { useRouter } from "next/navigation";
 import swal from "sweetalert";
 import Cookies from "js-cookie";
@@ -39,7 +41,7 @@ export default function NewSensor() {
   let [lng, setLng] = useState(null);
   const router = useRouter();
 
-  
+
   let [element, setelement] = useState(null);
   let [estado, setEstado] = useState(false);
   useEffect(() => {
@@ -103,36 +105,11 @@ export default function NewSensor() {
     Cookies.remoce("necesary");
   };
 
- 
+
   return (
     <div className="h-screen flex">
       <main className="flex-1 flex">
-        <aside className="h-full flex flex-col justify-between items-center py-4 px-2">
-          <Link href="" className="rounded-full">
-            <Image src="/user.png" width={32} height={32} alt="A user image" />
-          </Link>
-          <Link
-            href="/session"
-            onClick={logout}
-            className="p-2 rounded-full ease-in duration-300 hover:shadow-md hover:scale-110"
-          >
-            <svg
-              width="24px"
-              height="24px"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M15 4H18C19.1046 4 20 4.89543 20 6V18C20 19.1046 19.1046 20 18 20H15M8 8L4 12M4 12L8 16M4 12L16 12"
-                stroke="#000000"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              ></path>
-            </svg>
-          </Link>
-        </aside>
+        <Userbar />
 
         <div className="w-full flex flex-col p-4 justify-center">
           <h1 className="font-semilbold text-2xl text-left">Register Sensor</h1>

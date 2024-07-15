@@ -9,6 +9,8 @@ import { modify_person, search_person } from "../../../hooks/service_person";
 import Cookies from "js-cookie";
 import Sidebar from "../../../components/Sidebar";
 import Link from "next/link";
+
+import Userbar from "../../../components/Userbar";
 import Image from "next/image";
 import { useState } from 'react';
 
@@ -46,7 +48,10 @@ export default function modifyPerson() {
         name: yup.string().required("Obligatory field"),
         last_name: yup.string().required("Obligatory field"),
         email: yup.string().required("Obligatory field (end with @unl.edu.ec)"),
-        password: yup.string().required("Obligatory field"),
+        old_password: yup.string().required("Obligatory field"),
+        password: yup.string().required("Obligatory field").oneOf([yup.ref('confirm_password')], 'Your passwords do not match.') ,
+        confirm_password: yup.string().required("Obligatory field"),
+        
     });
 
     //validar formulario
@@ -63,6 +68,7 @@ export default function modifyPerson() {
             "email": data.email,
             "password": data.password,
             "external": uid,
+            "old_password" : data.old_password
         }
         modify_person(datos, token).then((info) => {
             if (info.code == "200") {
@@ -76,6 +82,7 @@ export default function modifyPerson() {
                 });
                 router.push("/person");
                 router.refresh();
+                
             } else {
                 swal({
                     title: "Error",
@@ -103,41 +110,7 @@ export default function modifyPerson() {
     return (
         <div className="h-screen flex">
             <main className="flex-1 flex">
-                <aside className="h-full flex flex-col justify-between items-center py-4 px-2">
-                    <Link href="" className="rounded-full">
-                        <Image src="/user.png" width={32} height={32} alt="A user image" />
-                    </Link>
-                    <Link
-                        href="/session"
-                        onClick={logout}
-                        className="p-2 rounded-full ease-in duration-300 hover:shadow-md hover:scale-110"
-                    >
-                        <svg
-                            width="24px"
-                            height="24px"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                            <g
-                                id="SVGRepo_tracerCarrier"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            ></g>
-                            <g id="SVGRepo_iconCarrier">
-                                {" "}
-                                <path
-                                    d="M15 4H18C19.1046 4 20 4.89543 20 6V18C20 19.1046 19.1046 20 18 20H15M8 8L4 12M4 12L8 16M4 12L16 12"
-                                    stroke="#000000"
-                                    stroke-width="1.5"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                ></path>{" "}
-                            </g>
-                        </svg>
-                    </Link>
-                </aside>
+                <Userbar />
 
                 <div className="w-full flex flex-col p-4 justify-center">
                     <h1 className="font-semilbold text-2xl text-left">Modify Account</h1>
@@ -152,7 +125,7 @@ export default function modifyPerson() {
                                     <label
                                         htmlFor="email"
                                         className="block text-sm font-medium mb-2"
-                                        
+
                                     >
                                         Name
                                     </label>
@@ -160,7 +133,7 @@ export default function modifyPerson() {
                                         type="text"
                                         name="name"
                                         id="name"
-                                        defaultValue = {person && person.name}
+                                        defaultValue={person && person.name}
                                         {...register("name")}
                                         className="py-2 px-2 block w-full border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                                     />
@@ -180,7 +153,7 @@ export default function modifyPerson() {
                                         type="text"
                                         name="email"
                                         id="email"
-                                        defaultValue = {person && person.last_name}
+                                        defaultValue={person && person.last_name}
                                         {...register("last_name")}
                                         className="py-2 px-2 block w-full border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                                     />
@@ -201,7 +174,7 @@ export default function modifyPerson() {
                                     type="text"
                                     name="dni"
                                     id="dni"
-                                    defaultValue = {person && person.dni}
+                                    defaultValue={person && person.dni}
                                     {...register("dni")}
                                     className="py-2 px-2 block w-full border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none bg-gray-100"
                                     readOnly
@@ -225,12 +198,31 @@ export default function modifyPerson() {
                                         type="email"
                                         name="email"
                                         id="email"
-                                        defaultValue = {person && person.email}
+                                        defaultValue={person && person.email}
                                         {...register("email")}
                                         className="py-2 px-2 block w-full border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                                     />
                                     <span className="block text-red-500 text-xs pl-1 min-h-5">
                                         {errors.email?.message}
+                                    </span>
+                                </div>
+
+                                <div className="w-full my-2">
+                                    <label
+                                        htmlFor="password"
+                                        className="block text-sm font-medium mb-2"
+                                    >
+                                        Old Password
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="old_password"
+                                        id="password"
+                                        {...register("old_password")}
+                                        className="py-2 px-2 block w-full border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                    />
+                                    <span className="block text-red-500 text-xs pl-1 min-h-5">
+                                        {errors.old_password?.message}
                                     </span>
                                 </div>
 
@@ -252,6 +244,26 @@ export default function modifyPerson() {
                                         {errors.password?.message}
                                     </span>
                                 </div>
+
+                                <div className="w-full my-2">
+                                    <label
+                                        htmlFor="password"
+                                        className="block text-sm font-medium mb-2"
+                                    >
+                                        Confirm Password
+                                    </label>
+                                    <input
+                                        type="password"
+                                        name="password"
+                                        id="password"
+                                        {...register("confirm_password")}
+                                        className="py-2 px-2 block w-full border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                    />
+                                    <span className="block text-red-500 text-xs pl-1 min-h-5">
+                                        {errors.confirm_password    ?.message}
+                                    </span>
+                                </div>
+
                             </div>
                         </div>
 

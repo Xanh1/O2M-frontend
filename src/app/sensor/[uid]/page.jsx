@@ -16,6 +16,8 @@ import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
+
+import Userbar from "../../../components/Userbar";
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -35,13 +37,13 @@ const LocationMarker = ({ setLat, setLng }) => {
 export default function EditSensor({ params }) {
   let token = Cookies.get("token");
   const router = useRouter();
-  
+
   let [element, setElement] = useState(null);
   let [estado, setEstado] = useState(false);
   let [sensor, setSensor] = useState(null);
   const [lat, setLat] = useState(null);
   const [lng, setLng] = useState(null);
-  
+
   useEffect(() => {
     if (!estado) {
       all_element(token).then((info) => {
@@ -103,7 +105,7 @@ export default function EditSensor({ params }) {
   };
 
   const changeStatus_sensor = (e) => {
-    e.preventDefault(); 
+    e.preventDefault();
     change_status(sensor.uid, token).then((info) => {
       if (info.code === 200) {
         const newStatus = !sensor.status ? "active" : "inactive";
@@ -156,37 +158,7 @@ export default function EditSensor({ params }) {
   return (
     <div className="h-screen flex">
       <main className="flex-1 flex">
-        <aside className="h-full flex flex-col justify-between items-center py-4 px-2">
-          <Link href="" className="rounded-full">
-            <Image src="/user.png" width={32} height={32} alt="A user image" />
-          </Link>
-          <Link
-            href="/session"
-            onClick={logout}
-            className="p-2 rounded-full ease-in duration-300 hover:shadow-md hover:scale-110"
-          >
-            <svg
-              width="24px"
-              height="24px"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
-              <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
-              <g id="SVGRepo_iconCarrier">
-                {" "}
-                <path
-                  d="M15 4H18C19.1046 4 20 4.89543 20 6V18C20 19.1046 19.1046 20 18 20H15M8 8L4 12M4 12L8 16M4 12L16 12"
-                  stroke="#000000"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                ></path>{" "}
-              </g>
-            </svg>
-          </Link>
-        </aside>
+        <Userbar />
 
         <div className="w-full flex flex-col p-4 justify-center">
           <h1 className="font-semilbold text-2xl text-left">Editar Sensor</h1>
