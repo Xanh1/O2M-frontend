@@ -110,9 +110,6 @@ export default function Person() {
                         </Link>
                     </div>
 
-
-
-
                     <div className="bg-gray-50 my-4 p-3 rounded-lg flex justify-between">
                         <div class="flex px-2 py-2 rounded-md border-2 bg-white overflow-hidden w-1/4">
                             <svg
