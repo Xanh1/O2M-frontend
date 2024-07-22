@@ -1,7 +1,15 @@
 import Link from "next/link";
 
+import Cookies from "js-cookie";
+
 export default function UserSidebar() {
   
+  const logout = (e) => {
+    Cookies.remove("token");
+    Cookies.remove("usuario");
+    Cookies.remove("necesary");
+  };
+
   return (
     <aside
       id="logo-sidebar"
@@ -21,11 +29,11 @@ export default function UserSidebar() {
                 xmlns="http://www.w3.org/2000/svg"
                 fill="#000000"
               >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                 <g
                   id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 ></g>
                 <g id="SVGRepo_iconCarrier">
                   {" "}
@@ -50,20 +58,20 @@ export default function UserSidebar() {
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                 <g
                   id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 ></g>
                 <g id="SVGRepo_iconCarrier">
                   {" "}
                   <path
                     d="M6 9V13M10 9V13M20 12H22M20 8L22 6M22 18L20 16M5.2 19H12.8C13.9201 19 14.4802 19 14.908 18.782C15.2843 18.5903 15.5903 18.2843 15.782 17.908C16 17.4802 16 16.9201 16 15.8V8.2C16 7.0799 16 6.51984 15.782 6.09202C15.5903 5.71569 15.2843 5.40973 14.908 5.21799C14.4802 5 13.9201 5 12.8 5H5.2C4.0799 5 3.51984 5 3.09202 5.21799C2.71569 5.40973 2.40973 5.71569 2.21799 6.09202C2 6.51984 2 7.07989 2 8.2V15.8C2 16.9201 2 17.4802 2.21799 17.908C2.40973 18.2843 2.71569 18.5903 3.09202 18.782C3.51984 19 4.07989 19 5.2 19Z"
                     stroke="#000000"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   ></path>{" "}
                 </g>
               </svg>
@@ -110,7 +118,7 @@ export default function UserSidebar() {
           </li>
           <li>
             <Link
-              href="monitoring"
+              href="/monitoring"
               className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
             >
               <svg
@@ -120,7 +128,7 @@ export default function UserSidebar() {
                 version="1.1"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                 <g
                   id="SVGRepo_tracerCarrier"
                   strokeLinecap="round"
@@ -150,26 +158,26 @@ export default function UserSidebar() {
                 xmlns="http://www.w3.org/2000/svg"
                 transform="matrix(1, 0, 0, 1, 0, 0)"
               >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                 <g
                   id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   stroke="#CCCCCC"
-                  stroke-width="0.096"
+                  strokeWidth="0.096"
                 ></g>
                 <g id="SVGRepo_iconCarrier">
                   {" "}
                   <path
                     d="M15 4H18C19.1046 4 20 4.89543 20 6V18C20 19.1046 19.1046 20 18 20H15M8 8L4 12M4 12L8 16M4 12L16 12"
                     stroke="#000000"
-                    stroke-width="1.5"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   ></path>{" "}
                 </g>
               </svg>
-              <span className="flex-1 ms-3 whitespace-nowrap">
+              <span onClick={logout} className="flex-1 ms-3 whitespace-nowrap">
                 Cerrar Sesión
               </span>
             </Link>
