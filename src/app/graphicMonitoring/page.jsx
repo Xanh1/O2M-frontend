@@ -20,7 +20,6 @@ export default function Monitoring() {
         const aireData = datos.datos.aire;
         const aguaData = datos.datos.agua;
 
-        // Procesa los datos del aire
         const labelsAire = aireData.map(
           (item) => `${item.dia}/${item.mes}/${item.año}`
         );
@@ -34,9 +33,22 @@ export default function Monitoring() {
               backgroundColor: "rgba(75, 192, 192, 0.6)",
             },
           ],
+          options: {
+            scales: {
+              x: {
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+                grid: {
+                  display: false
+                }
+              }
+            }
+          }
         });
 
-        // Procesa los datos del agua
         const labelsAgua = aguaData.map(
           (item) => `${item.dia}/${item.mes}/${item.año}`
         );
@@ -50,6 +62,20 @@ export default function Monitoring() {
               backgroundColor: "rgba(153, 102, 255, 0.6)",
             },
           ],
+          options: {
+            scales: {
+              x: {
+                grid: {
+                  display: false
+                }
+              },
+              y: {
+                grid: {
+                  display: false
+                }
+              }
+            }
+          }
         });
       }
     };
@@ -64,18 +90,40 @@ export default function Monitoring() {
         <UserSidebar />
         <div className="flex-1 py-6 sm:ml-64">
           <div className="py-4 rounded-lg mt-14">
-            <h1 className="text-center mb-4">Monitoreo de Calidad del Aire</h1>
-            <div className="flex justify-center">
+            <h1 className="text-center font-semibold mb-4">Monitoreo del Aire</h1>
+            <div className="flex justify-evenly items-center">
               <div className="max-w-lg w-full">
-                {chartDataAire.labels && <Bar data={chartDataAire} />}
+                {chartDataAire.labels && <Bar data={chartDataAire} options={chartDataAire.options} />}
+              </div>
+              <div className="max-w-sm my-3 p-4 border border-gray-300 rounded-lg">
+                <h2 className="pb-2 font-medium">
+                  Métrica Cálidad Aire (PPM)
+                </h2>
+                <ul className="text-sm">
+                  <li>Menos de 100 : Excelente</li>
+                  <li>100-199 : Bueno</li>
+                  <li>200-399 : Aceptable</li>
+                  <li>400-800 : Pobre</li>
+                  <li>Más de 800 : Deficiente</li>
+                </ul>
               </div>
             </div>
-            <h1 className="text-center mt-6 mb-4">
-              Monitoreo de Calidad del Agua
-            </h1>
-            <div className="flex justify-center">
+            <h1 className="text-center font-semibold mt-6 mb-4">Monitoreo del Agua</h1>
+            <div className="flex justify-evenly items-center">
               <div className="max-w-lg w-full">
-                {chartDataAgua.labels && <Bar data={chartDataAgua} />}
+                {chartDataAgua.labels && <Bar data={chartDataAgua} options={chartDataAgua.options} />}
+              </div>
+              <div className="my-3 p-4 border border-gray-300 rounded-lg">
+                <h2 className="pb-2 font-medium">
+                  Métrica Cálidad Agua (MG/L)
+                </h2>
+                <ul className="text-sm">
+                  <li>Menos de 300 : Excelente</li>
+                  <li>300-599 : Bueno</li>
+                  <li>600-899 : Aceptable</li>
+                  <li>900-1199 : Regular</li>
+                  <li>Más de 1200 : Deficiente</li>
+                </ul>
               </div>
             </div>
           </div>
