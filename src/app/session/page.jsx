@@ -10,8 +10,8 @@ import { authPerson } from "../../hooks/service_auth";
 
 export default function login() {
   const loginSchema = Yup.object().shape({
-    email: Yup.string().trim().required("Enter your email"),
-    password: Yup.string().trim().required("Enter your password"),
+    email: Yup.string().trim().required("Ingresa tu correo"),
+    password: Yup.string().trim().required("Ingresa tu contraseña"),
   });
 
   const router = useRouter();
@@ -27,8 +27,8 @@ export default function login() {
         Cookies.set("usuario", info.person);
         Cookies.set("necesary", info.necesary);
         swal({
-          title: "SUCCESSFUL LOGIN",
-          text: "Welcome " + info.person,
+          title: "Acción Satisfactoria",
+          text: "Bienvenido " + info.person.replace(".", " "),
           icon: "success",
           button: "Accept",
           timer: 4000,
@@ -96,12 +96,13 @@ export default function login() {
             />
           </g>
         </svg>
-        <h1 className="font-semibold text-xl">Sign in</h1>
+
+        <h1 className="font-semibold text-xl">O2M</h1>
       </div>
       <form className="my-8" onSubmit={handleSubmit(req)}>
-        <div className="max-w-sm my-3">
+        <div className="max-w-md my-3">
           <label htmlFor="email" className="block text-sm font-medium mb-2">
-            Email
+            Correo Electrónico
           </label>
           <input
             type="email"
@@ -116,7 +117,7 @@ export default function login() {
         </div>
         <div className="max-w-sm my-3">
           <label htmlFor="password" className="block text-sm font-medium mb-2">
-            Password
+            Contraseña
           </label>
           <input
             type="password"
@@ -133,7 +134,7 @@ export default function login() {
           <button className="btn relative border block w-full font-medium border-gray-200 inline-flex items-center justify-start overflow-hidden transition-all rounded-lg text-sm hover:bg-white group py-2 px-2">
             <span className="w-56 h-48 rounded bg-blue-500 absolute bottom-0 left-0 translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
             <span className="relative w-full text-center transition-colors duration-300 ease-in-out group-hover:text-white">
-              Sign in
+              Iniciar Sesión
             </span>
           </button>
         </div>
