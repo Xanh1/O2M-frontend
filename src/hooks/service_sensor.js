@@ -1,9 +1,9 @@
-import { GET, POST } from "./Connection";
+import { GET_SE, POST_SE } from "./Connection";
 
 export async function all_Sensor(token) {
   let datos = null;
   try {
-    datos = await GET("listSensor", token);
+    datos = await GET_SE("listSensor", token);
   } catch (error) {
     return { code: 500 };
   }
@@ -14,7 +14,7 @@ export async function all_Sensor(token) {
 export async function save_sensor(data, token) {
   let datos = null;
   try {
-    datos = await POST("/saveSensor", data, token);
+    datos = await POST_SE("/saveSensor", data, token);
   } catch (error) {
     console.log(error.response.data);
     return error.response.data;
@@ -26,7 +26,7 @@ export async function save_sensor(data, token) {
 export async function change_status(uid, token) {
   let datos = null;
   try {
-    datos = await GET("//modify_status_Sensor/"+uid, token);
+    datos = await GET_SE("//modify_status_Sensor/"+uid, token);
   } catch (error) {
     console.log(error.response.data);
     return error.response.data;
@@ -39,7 +39,7 @@ export async function change_status(uid, token) {
 export async function all_element(token) {
   let datos = null;
   try {
-    datos = await GET("/get/elements", token);
+    datos = await GET_SE("/get/elements", token);
   } catch (error) {
     //console.log(error.response.data);
     return { code: 500 };
@@ -50,7 +50,7 @@ export async function all_element(token) {
 export async function modify_sensor(data, token) {
   let datos = null;
   try {
-    datos = await POST("/modifySensor", data, token);
+    datos = await POST_SE("/modifySensor", data, token);
   } catch (error) {
     return error.data;
   }
@@ -60,7 +60,7 @@ export async function modify_sensor(data, token) {
 export async function get(token, uid) {
   let datos = null;
   try {
-    datos = await GET("/search/" + uid, token);
+    datos = await GET_SE("/search/" + uid, token);
   } catch (error) {
     //console.log(error.response.data);
     return { code: 500 };

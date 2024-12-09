@@ -1,11 +1,10 @@
-import { GET, POST } from "./Connection";
-import Cookies from "js-cookie";
+import { GET_SE, POST_SE } from "./Connection";
 
 export async function list_monitoring(token) {
   let datos = null;
 
   try {
-    datos = await GET("monitoring/list", token);
+    datos = await GET_SE("monitoring/list", token);
     console.log("aqui todo bien en listar monitoring");
   } catch (error) {
     console.log("Error en listar_lotes: ", error.response);
@@ -18,7 +17,7 @@ export async function promedio_calidad_por_dia() {
   let datos = null;
 
   try {
-    datos = await GET("monitoring/promedio/todo");
+    datos = await GET_SE("monitoring/promedio/todo");
     console.log("aqui todo bien en listar monitoring");
   } catch (error) {
     console.log("Error en listar_lotes: ", error.response);
@@ -41,19 +40,9 @@ export async function save_monitoring(data, token) {
 export async function modify_monitoring(data, external /*, token*/) {
   let datos = null;
   try {
-    datos = await POST("monitoring/modify/" + external, data /*, token*/);
+    datos = await POST_SE("monitoring/modify/" + external, data /*, token*/);
   } catch (error) {
     return error.data;
-  }
-  return datos.data;
-}
-
-export async function search_person(external /*, token*/) {
-  let datos = null;
-  try {
-    datos = await GET("person/search/uid/" + external /*, token*/);
-  } catch (error) {
-    return error.response.data;
   }
   return datos.data;
 }
@@ -61,7 +50,7 @@ export async function search_person(external /*, token*/) {
 export async function extrapolate_data_aire(data) {
   let response = null;
   try {
-    response = await POST("/monitoring/extrapolar/aire", data);
+    response = await POST_SE("/monitoring/extrapolar/aire", data);
   } catch (error) {
     console.log(error.response.data);
     return error.response.data;
@@ -72,7 +61,7 @@ export async function extrapolate_data_aire(data) {
 export async function extrapolate_data_agua(data) {
   let response = null;
   try {
-    response = await POST("/monitoring/extrapolar/agua", data);
+    response = await POST_SE("/monitoring/extrapolar/agua", data);
   } catch (error) {
     console.log(error.response.data);
     return error.response.data;

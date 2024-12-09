@@ -2,7 +2,8 @@
 const nextConfig = {
     distDir: 'build_node',
     env: {
-        URL_API: "http://localhost:5000/"
+        API_ACCOUNT_SERVICE: "http://localhost:5000/",
+        API_SENSOR_SERVICE: "http://localhost:5001/"
     }
 };
 
